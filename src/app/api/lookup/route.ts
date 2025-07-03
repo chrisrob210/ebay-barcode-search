@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getEbayAccessToken } from '@/lib/ebay';
 
 export async function GET(req: NextRequest) {
-    console.log('🔥 ROUTE HIT');
     const { searchParams } = new URL(req.url);
     const upc = searchParams.get('upc');
 
@@ -15,14 +14,13 @@ export async function GET(req: NextRequest) {
             `https://api.ebay.com/buy/browse/v1/item_summary/search?gtin=${encodeURIComponent(upc)}`,
             {
                 headers: {
-                    'Authorization': `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
             }
         );
 
         const ebayData = await ebayRes.json();
-
         const item = ebayData.itemSummaries?.[0];
 
         return NextResponse.json({
